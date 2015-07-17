@@ -1,46 +1,49 @@
 class MasterMind
+#Written by Jeremy Herzberg; jeremy.herzberg@gmail.com; www.jeremyherzberg.com
+#MasterMind algorithm derived by notable researchers (https://en.wikipedia.org/wiki/Mastermind_(board_game)#Algorithms)
+#This algorithm works by first producing all permutations of possible answers and then eliminating possiablities based
+#if the possibility produces the same peg result when tested against the guess as when the guess tested against the answer
+#AFTER ALL, THE SOLUTION WILL PRODUCE THE SAME PEG RESULT WHEN TESTED AGAINST THE GUESS AS WHEN THE GUESS IS TESTED AGAINST THE SOLUTION
 
-attr_reader :number_of_guesses, :number_of_guesses
-attr_accessor :human_solution,:guess #set to att_reader upon deployment, set to accessor for testing only
+  attr_reader :number_of_guesses, :number_of_guesses,:hack_needed
+  #set all attr_accessor to to att_reader upon deployment, set to accessor for testing only.. I will leave it like this for you
+  attr_accessor :human_solution,:guess,:all_permutations
 
   def initialize(human_solution)
 
-   @human_solution = human_solution
-   @all_permutations = [1,2,3,4,5,6].repeated_permutation(4).to_a
-   @guess = [1,1,2,2]
-   @number_of_guesses = 1
-   @total_times_run = 0
-   @sum_of_guesses = 0
-
+    @human_solution = human_solution
+    @all_permutations = [1,2,3,4,5,6].repeated_permutation(4).to_a
+    @guess = [1,1,2,2] #Knuth demonstrated this as the optimal starting guess
+    @number_of_guesses = 1
   end
 
+  #checks to see if a number in an array is a black_peg
   def is_Black_Peg?(guess,position)
 
     return @human_solution[position] == guess[position]
 
   end
 
+  #checks to see if a number in an array is a white_peg
   def is_White_Peg?(guess,position)
 
     return @human_solution.count(guess[position]) > 0 && !is_Black_Peg?(guess,position)
   end
 
+  #same as is_Black_peg? but uses guess as the answer
   def is_Black_Peg_against_guess?(guess,position)
 
     return @guess[position] == guess[position]
-end
+  end
 
+  #same as is_White_peg? but uses guess as the answer
   def is_White_Peg_against_guess?(guess,position)
 
-  return @guess.count(guess[position]) > 0 && !is_Black_Peg_against_guess?(guess,position)
+    return @guess.count(guess[position]) > 0 && !is_Black_Peg_against_guess?(guess,position)
 
-end
+  end
 
-  def is_Repeated_in_Guess?(guess,x)
-
-    return guess.count(guess[x]) > 1
-  end # maybe not needed
-
+  #submits the @guess against the answer to get the peg result
   def read_pegs(guess)
 
     @pegs = {B: 0, W: 0}
@@ -61,17 +64,18 @@ end
           if counted.count(guess[x]) > 0;
 
           else @pegs[:W] += 1
-            counted.push(guess[x])
-        end
+          counted.push(guess[x])
+          end
 
         else
           @pegs[:W] +=1
-         end
+        end
       end
-   end
+    end
     return @pegs
-      end #check for unneeded logic
+  end
 
+  #submits the any guess against the @guess to get the peg result
   def read_pegs_against_guess(guess)
     pegs = {B: 0, W: 0}
     counted = []
@@ -101,30 +105,8 @@ end
     return pegs
   end
 
-  def is_correct?(guess)
-    return guess == @human_solution
-  end
-
-  def sum_of_pegs(guess)
-    return read_pegs(guess).values.inject {|sum,x| sum + x}
-  end
-
-  def test_is_correct
-    true_if_im_done = true
-    5000.times do
-      @human_solution.clear
-      4.times {@human_solution.push(rand(1..6))}
-
-      guess_solution
-      true_if_im_done = false if @guess != @human_solution
-      @all_permutations = [1,2,3,4,5,6].repeated_permutation(4).to_a
-      @number_of_guesses =1
-    end
-    return true_if_im_done
-  end
-
   def guess_solution
-
+    @hack_needed = false
     all_permutations = @all_permutations
 
     begin
@@ -132,23 +114,23 @@ end
       @number_of_guesses +=1
       all_permutations = all_permutations.select {|x| read_pegs_against_guess(x) == read_pegs(@guess)}
 
-      #I am very sorry to put this here, it is a hack. I can't figure out why the code
-      #runs almost all the time but in small number of cases it doesn't work.
-      #technically I am just resetting the method and no information is passed so the number
-      #of guesses returned from this is still legitimate.
-      if all_permutations == []
+      #after extensive testing it appears that this hack is needed 4.5-5% (4,871/100,000) of the time to avoid an inf loop
+      #I think there is a seeding issue with the RNG and I am not sure how to fix it
+      #this block just restarts the guessing process, no information is passed from any previous runs
+
+      if all_permutations.empty?
         all_permutations = @all_permutations
         @number_of_guesses = 1
         @guess = [1,1,2,2]
+        @hack_needed = true
       end
 
-      @guess = all_permutations[rand(all_permutations.length)]
-    end while @guess != @human_solution
-    @total_times_run +=1
-    @sum_of_guesses = @sum_of_guesses + @number_of_guesses
 
-    puts (@sum_of_guesses.to_f / @total_times_run.to_f).to_f
-    puts @number_of_guesses
+      @guess = all_permutations[rand(all_permutations.length).to_i]
+
+    end while @guess != @human_solution
+
+
 
   end
 
