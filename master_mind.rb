@@ -5,7 +5,7 @@ class MasterMind
 #if the possibility produces the same peg result when tested against the guess as when the guess tested against the answer
 #AFTER ALL, THE SOLUTION WILL PRODUCE THE SAME PEG RESULT WHEN TESTED AGAINST THE GUESS AS WHEN THE GUESS IS TESTED AGAINST THE SOLUTION
 
-  attr_reader :number_of_guesses,:hack_needed
+  attr_reader :hack_needed
   #set all attr_accessor to to att_reader upon deployment, set to accessor for testing only.. I will leave it like this for you
   attr_accessor :human_solution,:guess,:all_permutations, :number_of_guesses
 
