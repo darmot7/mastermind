@@ -9,31 +9,29 @@ require './master_mind'
     4.times { |x|
       puts 'What is color  #'  + (x+1).to_s + '?'
 
-
       input = gets.chomp
 
-
-      until is_valid_input?(input[0])
-
-        if input[0].downcase == 'q'
-        puts 'quitting'
+      if input[0].downcase == "q"
+        human_solution.clear
         break
 
-      elsif
+      until is_valid_input?(input)
+
+
+
+        input.clear
         puts 'Please try your input again, or enter Q to quit'
         input = gets.chomp
-
         end
-      end
 
-      if input[0].downcase == 'q'
-        puts 'Quitting...'
-        break
-      end
 
+      end
       human_solution.push(input[0])
+      print human_solution
 
     }
+
+    if human_solution != []
     print 'your solution is: ' + human_solution.to_s.upcase + "\n"
     human_solution = convert_from_color_to_num(human_solution)
 
@@ -45,6 +43,9 @@ require './master_mind'
 
     print "I've guessed your solution and it is: " + output.to_s + ' and it took ' + mm.number_of_guesses.to_s + ' guesses.'
     #print output
+    else
+      print "Quitting....."
+    end
 
 
   end
@@ -76,16 +77,10 @@ require './master_mind'
       return color_array
   end
 
-  def convert_to_color(number)
-
-  end
-
-  def convert_to_number(color)
-
-  end
 
   def is_valid_input?(input)
-    return input[0].downcase == ("r" || "g" || "o" || "y" || "b" || "p")
+    acceptable_inputs = ["r","g","o","y","b","p"]
+    return acceptable_inputs.include?(input[0])
   end
 
 end
