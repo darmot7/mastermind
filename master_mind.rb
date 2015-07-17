@@ -1,6 +1,6 @@
 class MasterMindAPP
 require './master_mind'
-#master_mind_app class, comment lines 91 and 90 to test using master_mind_test.rb
+#master_mind_app class, comment lines 101 and 102 to test using master_mind_test.rb
 
   def run
 
@@ -24,7 +24,12 @@ require './master_mind'
         input.clear
         puts 'Please try your input again, or enter Q to quit'
         input = gets.chomp
+
+        if input.nil? || input == ""
+          input = " "
         end
+
+      end
 
       #so entering Q makes the app quit
       if input[0].downcase == "q"
