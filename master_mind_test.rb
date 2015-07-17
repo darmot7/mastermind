@@ -13,10 +13,6 @@ class MyTest < Test::Unit::TestCase
   # Called after every test method runs. Can be used to tear
   # down fixture information.
 
-  def teardown
-    # Do nothing
-  end
-
 
   def test_black_peg_assignment
     guess = [4,5,2,1]
@@ -33,6 +29,21 @@ class MyTest < Test::Unit::TestCase
 
   end
 
+  def test_black_peg_against_guess
+    guess = [4,5,2,1]
+    @mm.guess = @mm.human_solution
+    assert_false @mm.is_Black_Peg?(guess,0)
+    assert_false @mm.is_Black_Peg?(guess,1)
+    assert_true @mm.is_Black_Peg?(guess,2)
+    assert_false @mm.is_Black_Peg?(guess,3)
+
+    guess2 = [1,1,1,1]
+    assert_true @mm.is_Black_Peg?(guess2,0)
+    assert_false @mm.is_Black_Peg?(guess2,1)
+    assert_false @mm.is_Black_Peg?(guess2,2)
+    assert_false @mm.is_Black_Peg?(guess2,3)
+  end
+
   def test_white_peg_assignment
     guess = [2,5,4,1]
     assert_true @mm.is_White_Peg?(guess,0)
@@ -46,14 +57,21 @@ class MyTest < Test::Unit::TestCase
     assert_true @mm.is_White_Peg?(guess,3)
   end
 
-  def test_find_repeted_numbers
-    guess = [2,3,2,4]
-    guess2 = [2,3,4,5]
-    assert_true @mm.is_Repeated_in_Guess?(guess,guess[0])
-    assert_false @mm.is_Repeated_in_Guess?(guess2,guess[0])
+  def test_white_peg_assignment_against_guess
+    guess = [2,5,4,1]
+    @mm.guess = @mm.human_solution
+    assert_true @mm.is_White_Peg_against_guess?(guess,0)
+    assert_true @mm.is_White_Peg_against_guess?(guess,2)
+    assert_false @mm.is_White_Peg_against_guess?(guess,1)
+
+    guess = [2,4,1,2]
+    assert_true @mm.is_White_Peg_against_guess?(guess,0)
+    assert_true @mm.is_White_Peg_against_guess?(guess,1)
+    assert_true @mm.is_White_Peg_against_guess?(guess,2)
+    assert_true @mm.is_White_Peg_against_guess?(guess,3)
   end
 
-  def test_return_peg_from_guess
+  def test_read_peg_from_guess
     #human_solution = [1,2,2,4]
     guess = [1,2,2,2]
     guess2 = [1,1,4,4]
@@ -127,7 +145,7 @@ class MyTest < Test::Unit::TestCase
 
   end
 
-  def test_return_peg_from_guess_against_guess
+  def test_read_peg_from_guess_against_guess
     @mm.guess = [1,2,2,4]
     guess = [1,2,2,2]
     guess2 = [1,1,4,4]
@@ -204,28 +222,32 @@ class MyTest < Test::Unit::TestCase
 
   end
 
-  def test_is_correct
-    guess = [1,2,2,4]
-    assert_true @mm.is_correct?(guess)
-  end
-
   def test_guess_solution
 
-    #@mm.human_solution.clear
-    #4.times {@mm.human_solution.push(rand(1..6))}
-    @mm.human_solution = [6,3,4,4]
+    @mm.human_solution.clear
+    4.times {@mm.human_solution.push(rand(1..6))}
     @mm.guess_solution
-   assert_true @mm.guess == @mm.human_solution
+    assert_true @mm.guess == @mm.human_solution
   end
 
-  def test_test_is_correct
-    assert_true @mm.test_is_correct
-  end
+  def test_guess_solution_x_times
 
-  def test_sum_of_pegs
-    @mm.guess = [1,1,4,4]
-    peg_return_from_guess2 = {B: 2, W: 0}
-    assert_equal @mm.sum_of_pegs(@mm.guess),2
+    permutation_holder = @mm.all_permutations
+    true_if_im_done_testing = true
+    hack_counter = 0
+    100000.times do
+      @mm.human_solution.clear
+      4.times {@mm.human_solution.push(rand(1..6))}
+
+      @mm.guess_solution
+      hack_counter += 1 if @mm.hack_needed == true
+
+      true_if_im_done_testing = false if @mm.guess != @mm.human_solution
+      @mm.all_permutations = permutation_holder #so we don't have to keep recalculating this
+      @number_of_guesses =1
+    end
+    puts hack_counter if hack_counter != 0
+    assert_true true_if_im_done_testing
   end
 
 end
