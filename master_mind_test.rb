@@ -194,10 +194,13 @@ class MyTest < Test::Unit::TestCase
     assert_equal @mm.read_pegs_against_guess(guess18), peg_return_from_guess18
     assert_equal @mm.read_pegs_against_guess(guess19), peg_return_from_guess19
 
-    @mm.guess = [1,1,2,2]
+    @mm.guess = [4,1,4,4]
     guess20 = [1,2,3,4]
+    guess21 = [1,1,2,4]
     peg_return_from_guess20 = {B:1,W:1}
+    peg_return_from_guess21 = {B:2,W:0}
     assert_equal @mm.read_pegs_against_guess(guess20), peg_return_from_guess20
+    assert_equal @mm.read_pegs_against_guess(guess21), peg_return_from_guess21
 
   end
 
@@ -207,10 +210,10 @@ class MyTest < Test::Unit::TestCase
   end
 
   def test_guess_solution
-  test_success = true
 
-    @mm.human_solution.clear
-    4.times {@mm.human_solution.push(rand(1..6))}
+    #@mm.human_solution.clear
+    #4.times {@mm.human_solution.push(rand(1..6))}
+    @mm.human_solution = [6,3,4,4]
     @mm.guess_solution
    assert_true @mm.guess == @mm.human_solution
   end
@@ -222,7 +225,7 @@ class MyTest < Test::Unit::TestCase
   def test_sum_of_pegs
     @mm.guess = [1,1,4,4]
     peg_return_from_guess2 = {B: 2, W: 0}
-    assert_equal @mm.sum_of_pegs(mm.guess),2
+    assert_equal @mm.sum_of_pegs(@mm.guess),2
   end
 
 end
