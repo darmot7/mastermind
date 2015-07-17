@@ -51,7 +51,7 @@ class MasterMind
     for x in 0..3
       if is_Black_Peg?(guess,x)
         @pegs[:B] += 1
-        if counted.count(guess[x]) > 0 && @pegs[:W] > 0 #a way to handle double counting of duplicates
+        if counted.include?(guess[x])  && @pegs[:W] > 0 #a way to handle double counting of duplicates
           @pegs[:W] -= 1
 
         else counted.push(guess[x])
