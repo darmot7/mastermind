@@ -5,9 +5,9 @@ class MasterMind
 #if the possibility produces the same peg result when tested against the guess as when the guess tested against the answer
 #AFTER ALL, THE SOLUTION WILL PRODUCE THE SAME PEG RESULT WHEN TESTED AGAINST THE GUESS AS WHEN THE GUESS IS TESTED AGAINST THE SOLUTION
 
-  attr_reader :number_of_guesses, :number_of_guesses,:hack_needed
+  attr_reader :number_of_guesses,:hack_needed
   #set all attr_accessor to to att_reader upon deployment, set to accessor for testing only.. I will leave it like this for you
-  attr_accessor :human_solution,:guess,:all_permutations
+  attr_accessor :human_solution,:guess,:all_permutations, :number_of_guesses
 
   def initialize(human_solution)
 
@@ -110,8 +110,7 @@ class MasterMind
     all_permutations = @all_permutations
 
     begin
-
-      @number_of_guesses +=1
+      @number_of_guesses += 1
       all_permutations = all_permutations.select {|x| read_pegs_against_guess(x) == read_pegs(@guess)}
 
       #after extensive testing it appears that this hack is needed 4.5-5% (4,871/100,000) of the time to avoid an inf loop
