@@ -9,7 +9,7 @@ class MyTest < Test::Unit::TestCase
   def setup
     human_solution = [1,2,2,4]
     @mm = MasterMind.new(human_solution)
-    @mmapp = MasterMindAPP.new
+    @mmaster_mind_app = MasterMindAPP.new
   end
 
   # Called after every test method runs. Can be used to tear
@@ -230,6 +230,7 @@ class MyTest < Test::Unit::TestCase
     4.times {@mm.human_solution.push(rand(1..6))}
     @mm.guess_solution
     assert_true @mm.guess == @mm.human_solution
+
   end
 
   def test_guess_solution_x_times
@@ -237,16 +238,20 @@ class MyTest < Test::Unit::TestCase
     permutation_holder = @mm.all_permutations
     true_if_im_done_testing = true
     hack_counter = 0
-    100.times do
+
+    10000.times do
       @mm.human_solution.clear
       4.times {@mm.human_solution.push(rand(1..6))}
 
       @mm.guess_solution
-      hack_counter += 1 if @mm.hack_needed == true
+      puts @mm.number_of_guesses if @mm.number_of_guesses >= 10
+      #workaround_counter += 1 if @mm.hack_needed == true #used to determine when the workaround is used
 
       true_if_im_done_testing = false if @mm.guess != @mm.human_solution
       @mm.all_permutations = permutation_holder #so we don't have to keep recalculating this
-      @number_of_guesses =1
+      @mm.number_of_guesses = 1
+
+
     end
     puts hack_counter if hack_counter != 0
     assert_true true_if_im_done_testing
@@ -254,8 +259,11 @@ class MyTest < Test::Unit::TestCase
 
   def test_is_valid_number
     input = "g"
-    assert_true @mmapp.is_valid_input?(input)
+    assert_true @master_mind_app.is_valid_input?(input)
     input = "q"
-    assert_false @mmapp.is_valid_input?(input)
+    assert_false @master_mind_app.is_valid_input?(input)
+    input = "12345"
+    assert_false @master_mind_app.is_valid_input?(input)
+
   end
 end
