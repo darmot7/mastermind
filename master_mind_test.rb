@@ -1,5 +1,6 @@
 require 'test/unit'
 require './master_mind'
+require './master_mind_app'
 
 class MyTest < Test::Unit::TestCase
 
@@ -8,6 +9,7 @@ class MyTest < Test::Unit::TestCase
   def setup
     human_solution = [1,2,2,4]
     @mm = MasterMind.new(human_solution)
+    @mmapp = MasterMindAPP.new
   end
 
   # Called after every test method runs. Can be used to tear
@@ -235,7 +237,7 @@ class MyTest < Test::Unit::TestCase
     permutation_holder = @mm.all_permutations
     true_if_im_done_testing = true
     hack_counter = 0
-    100000.times do
+    100.times do
       @mm.human_solution.clear
       4.times {@mm.human_solution.push(rand(1..6))}
 
@@ -250,4 +252,10 @@ class MyTest < Test::Unit::TestCase
     assert_true true_if_im_done_testing
   end
 
+  def test_is_valid_number
+    input = "g"
+    assert_true @mmapp.is_valid_input?(input)
+    input = "q"
+    assert_false @mmapp.is_valid_input?(input)
+  end
 end
