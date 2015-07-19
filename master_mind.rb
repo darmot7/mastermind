@@ -1,102 +1,136 @@
-class MasterMindAPP
-require './master_mind'
-#master_mind_app class, comment lines 101 and 102 to test using master_mind_test.rb
+class MasterMind
+#Written by Jeremy Herzberg; jeremy.herzberg@gmail.com; www.jeremyherzberg.com
+#MasterMind algorithm derived by notable researchers (https://en.wikipedia.org/wiki/Mastermind_(board_game)#Algorithms)
+#This algorithm works by first producing all permutations of possible answers and then eliminating possiablities based
+#if the possibility produces the same peg result when tested against the guess as when the guess tested against the answer
+#AFTER ALL, THE SOLUTION WILL PRODUCE THE SAME PEG RESULT WHEN TESTED AGAINST THE GUESS AS WHEN THE GUESS IS TESTED AGAINST THE SOLUTION
 
-  def run
+  attr_reader :hack_needed
+  #set all attr_accessor to to att_reader upon deployment, set to accessor for testing only.. I will leave it like this for you
+  attr_accessor :human_solution,:guess,:all_permutations, :number_of_guesses
 
-    human_solution = []
-    puts 'Please Input the Solution. The solution will consist of 4 colors. Your Color choices are (R)ed, (G)reen, (O)range, (Y)ellow, (B)lue, (P)urple'
+  def initialize(human_solution)
 
-    #loop to populate the human_solution
-    4.times { |x|
-      puts 'What is color  #'  + (x+1).to_s + '?'
+    @human_solution = human_solution
+    @all_permutations = [1,2,3,4,5,6].repeated_permutation(4).to_a
+    @guess = [1,1,2,2] #Knuth demonstrated this as the optimal starting guess
+    @number_of_guesses = 1
+  end
 
-      input = gets.chomp
+  #checks to see if a number in an array is a black_peg
+  def is_Black_Peg?(guess,position)
 
-      if input.nil? || input == ""
-        input = " "
-      end
-      input.downcase
-        #loops until a vaild input is entered
+    return @human_solution[position] == guess[position]
 
-      until is_valid_input?(input)
+  end
 
-        input.clear
-        puts 'Please try your input again, or enter Q to quit'
-        input = gets.chomp
+  #checks to see if a number in an array is a white_peg
+  def is_White_Peg?(guess,position)
 
-        if input.nil? || input == ""
-          input = " "
+    return @human_solution.count(guess[position]) > 0 && !is_Black_Peg?(guess,position)
+  end
+
+  #same as is_Black_peg? but uses guess as the answer
+  def is_Black_Peg_against_guess?(guess,position)
+
+    return @guess[position] == guess[position]
+  end
+
+  #same as is_White_peg? but uses guess as the answer
+  def is_White_Peg_against_guess?(guess,position)
+
+    return @guess.count(guess[position]) > 0 && !is_Black_Peg_against_guess?(guess,position)
+
+  end
+
+  #submits the @guess against the answer to get the peg result
+  def read_pegs(guess)
+
+    @pegs = {B: 0, W: 0}
+    counted = []
+    for x in 0..3
+      if is_Black_Peg?(guess,x)
+        @pegs[:B] += 1
+        if counted.include?(guess[x])  && @pegs[:W] > 0 #a way to handle double counting of duplicates
+          @pegs[:W] -= 1
+
+        else counted.push(guess[x])
+
         end
 
+      elsif is_White_Peg?(guess,x)
+
+        if (@human_solution.count(guess[x]) < guess.count(guess[x])) && counted.count(guess[x] == 0)
+          if counted.count(guess[x]) > 0;
+
+          else @pegs[:W] += 1
+          counted.push(guess[x])
+          end
+
+        else
+          @pegs[:W] +=1
+        end
       end
-
-      #so entering Q makes the app quit
-      if input[0].downcase == "q"
-        human_solution.clear
-        break
-      end
-
-      human_solution.push(input[0].downcase)
-      print "Color Entered: " + input[0] + "\n"
-      print human_solution.to_s + "\n"
-
-    }
-
-    if human_solution != [] #if human_solution = [] then we quit
-
-      print 'your solution is: ' + human_solution.to_s.upcase + "\n"
-
-      human_solution = convert_from_color_to_num(human_solution)
-
-      mm = MasterMind.new(human_solution)
-
-      mm.guess_solution
-
-      computer_answer = convert_from_num_to_color(mm.guess)
-
-      print "I've guessed your solution and it is: " + computer_answer.to_s + ' and it took ' + mm.number_of_guesses.to_s + " guesses. \n "
-
-    else
-      print "Quitting.....Have a nice day! \n"
     end
+    return @pegs
   end
 
-  def convert_from_color_to_num(color_array)
-    number_array = []
-    color_array.each {|x|
+  #submits the any guess against the @guess to get the peg result
+  def read_pegs_against_guess(guess)
+    pegs = {B: 0, W: 0}
+    counted = []
+    for x in 0..3
+      if is_Black_Peg_against_guess?(guess,x)
+        pegs[:B] += 1
+        if counted.count(guess[x]) > 0 && pegs[:W] > 0 #a way to handle double counting of duplicates
+          pegs[:W] -= 1
 
-      number_array.push(1) if x == "r"
-      number_array.push(2) if x == "g"
-      number_array.push(3) if x == "o"
-      number_array.push(4) if x == "y"
-      number_array.push(5) if x == "b"
-      number_array.push(6) if x == "p"
-    }
-    return number_array
+        else counted.push(guess[x])
+        end
+
+      elsif is_White_Peg_against_guess?(guess,x)
+
+        if @guess.count(guess[x]) < guess.count(guess[x]) && counted.count(guess[x] == 0)
+          if counted.count(guess[x]) > 0;
+
+          else pegs[:W] += 1
+          counted.push(guess[x])
+          end
+
+        else
+          pegs[:W] +=1
+        end
+      end
+    end
+    return pegs
   end
 
-  def convert_from_num_to_color(number_array)
-    color_array = []
-    number_array.each {|x|
-      color_array.push("R") if x == 1
-      color_array.push("G") if x == 2
-      color_array.push("O") if x == 3
-      color_array.push("Y") if x == 4
-      color_array.push("B") if x == 5
-      color_array.push("P") if x == 6
-    }
-      return color_array
-  end
+  def guess_solution
+    @hack_needed = false
+    all_permutations = @all_permutations
+
+    begin
+      @number_of_guesses += 1
+      all_permutations = all_permutations.select {|x| read_pegs_against_guess(x) == read_pegs(@guess)}
+
+      #after extensive testing it appears that this hack is needed 4.5-5% (4,871/100,000) of the time to avoid an inf loop
+      #I think there is a seeding issue with the RNG and I am not sure how to fix it
+      #this block just restarts the guessing process, no information is passed from any previous runs
+
+      if all_permutations.empty?
+        all_permutations = @all_permutations
+        @number_of_guesses = 1
+        @guess = [1,1,2,2]
+        @hack_needed = true
+      end
 
 
-  def is_valid_input?(input)
+      @guess = all_permutations[rand(all_permutations.length).to_i]
 
-    acceptable_inputs = ["r","g","o","y","b","p","q"]
-    return acceptable_inputs.include?(input[0].downcase)
+    end while @guess != @human_solution
+
+
+
   end
 
 end
-
-master_mind_app = MasterMindAPP.new
-master_mind_app.run
