@@ -145,6 +145,14 @@ class MyTest < Test::Unit::TestCase
     peg_return_from_guess20 = {B:1,W:1}
     assert_equal @mm.read_pegs(guess20), peg_return_from_guess20
 
+    @mm.human_solution = [6,4,3,2]
+    guess22 = [1,1,2,2]
+    guess23 = [1,3,1,1]
+    peg_return_from_guess22 = {B: 1, W: 0}
+    peg_return_from_guess23 = {B: 0, W: 1}
+    assert_equal @mm.read_pegs(guess22), peg_return_from_guess22
+    assert_equal @mm.read_pegs(guess23), peg_return_from_guess23
+
   end
 
   def test_read_peg_from_guess_against_guess
@@ -222,6 +230,15 @@ class MyTest < Test::Unit::TestCase
     assert_equal @mm.read_pegs_against_guess(guess20), peg_return_from_guess20
     assert_equal @mm.read_pegs_against_guess(guess21), peg_return_from_guess21
 
+    @mm.guess = [6,4,3,2]
+    guess22 = [1,1,2,2]
+    guess23 = [1,3,1,1]
+    peg_return_from_guess22 = {B: 1, W: 0}
+    peg_return_from_guess23 = {B: 0, W: 1}
+    assert_equal @mm.read_pegs_against_guess(guess22), peg_return_from_guess22
+    assert_equal @mm.read_pegs_against_guess(guess23), peg_return_from_guess23
+
+
   end
 
   def test_guess_solution
@@ -253,7 +270,7 @@ class MyTest < Test::Unit::TestCase
 
 
     end
-    puts hack_counter if hack_counter != 0
+    puts @mm.number_of_workarounds_used
     assert_true true_if_im_done_testing
   end
 
