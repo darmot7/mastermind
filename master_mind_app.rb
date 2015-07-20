@@ -12,15 +12,24 @@ require './master_mind'
       puts 'What is color  #'  + (x+1).to_s + '?'
 
       input = gets.chomp
-      input.downcase
 
-      #loops until a vaild input is entered
+      if input.nil? || input == ""
+        input = " "
+      end
+      input.downcase
+        #loops until a vaild input is entered
+
       until is_valid_input?(input)
 
         input.clear
         puts 'Please try your input again, or enter Q to quit'
         input = gets.chomp
+
+        if input.nil? || input == ""
+          input = " "
         end
+
+      end
 
       #so entering Q makes the app quit
       if input[0].downcase == "q"
@@ -82,6 +91,7 @@ require './master_mind'
 
 
   def is_valid_input?(input)
+
     acceptable_inputs = ["r","g","o","y","b","p","q"]
     return acceptable_inputs.include?(input[0].downcase)
   end
