@@ -7,4 +7,4 @@ Algorithm help from https://en.wikipedia.org/wiki/Mastermind_(board_game)#Algori
 
 To run this application cd to the dir you have master_mind.app.rb and type "ruby master_mind_app.rb" 
 
-If you downloaded and tried run this app between the dates July 17 2015 - July 19 2015 and the program did not work, please try it again. I had a problem with how I named the files when uploading to git!
+There is a sneaky bug in this app. About 6% of the time I have to reset all_permutations and I am unsure as to why I have to do it. My algorithm is solid but there must be a bug that I am not aware of in my implementation. I am working on it. With the fix in place, it runs 100% of the time.
