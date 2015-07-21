@@ -84,13 +84,14 @@ class MasterMind
         permutation_in_series.delete_at(permutation_in_series.find_index(guess[x]))
 
       end
-
     }
 
     permutation_in_series.each_index {|x| if is_White_Peg_against_guess?(guess_duplicate,permutation_in_series,x)
                                       @pegs[:W] += 1
                                       guess_duplicate.delete_at(guess_duplicate.find_index(permutation_in_series[x]))
-                                    end}
+                                          end
+    }
+    
     return @pegs
   end
 
