@@ -7,15 +7,10 @@ class MasterMind
   #AFTER ALL, THE SOLUTION WILL PRODUCE THE SAME PEG RESULT WHEN TESTED AGAINST THE GUESS AS WHEN THE GUESS IS TESTED AGAINST THE SOLUTION
 
   #set all attr_accessor to to att_reader upon deployment, set to accessor for testing only.. I will leave it like this for you
-  attr_accessor :human_solution,:guess,:all_permutations, :number_of_guesses
+  attr_accessor :human_solution,:guess,:number_of_guesses
 
   def initialize(human_solution)
-
     @human_solution = human_solution
-    @all_permutations = [1,2,3,4,5,6].repeated_permutation(4).to_a
-    @guess = [1,1,2,2] #Knuth demonstrated this as the optimal starting guess
-    @number_of_guesses = 1
-    @number_of_workarounds_used = 0
   end
 
   #checks to see if a number in an array is a black_peg
@@ -101,12 +96,11 @@ class MasterMind
 
   def guess_solution
     @number_of_guesses = 1
-    all_permutations = @all_permutations
-    guess_set = []
-    @guess = [1,1,2,2]
+    all_permutations = [1,2,3,4,5,6].repeated_permutation(4).to_a
+    @guess = [1,1,2,2] #Knuth demonstrated this as the optimal starting guess
 
     until read_pegs(@guess) == {B:4, W:0}
-      guess_set.push(@guess)
+
 
       all_permutations = all_permutations.select {|x| read_pegs_against_guess(x) == read_pegs(@guess)}
 
