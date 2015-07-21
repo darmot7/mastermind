@@ -7,9 +7,8 @@ class MyTest < Test::Unit::TestCase
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-    human_solution = [1,2,2,4]
-    @mm = MasterMind.new(human_solution)
-    @mmaster_mind_app = MasterMindAPP.new
+    @mm = MasterMind.new([1,2,2,4])
+
   end
 
   # Called after every test method runs. Can be used to tear
@@ -17,64 +16,80 @@ class MyTest < Test::Unit::TestCase
 
 
   def test_black_peg_assignment
+   # @mm.human_solution = @mm.guess
     guess = [4,5,2,1]
     assert_false @mm.is_Black_Peg?(guess,0)
     assert_false @mm.is_Black_Peg?(guess,1)
     assert_true @mm.is_Black_Peg?(guess,2)
     assert_false @mm.is_Black_Peg?(guess,3)
 
-    guess2 = [1,1,1,1]
+    guess2 = [1,1,4,4]
     assert_true @mm.is_Black_Peg?(guess2,0)
     assert_false @mm.is_Black_Peg?(guess2,1)
     assert_false @mm.is_Black_Peg?(guess2,2)
-    assert_false @mm.is_Black_Peg?(guess2,3)
+    assert_true @mm.is_Black_Peg?(guess2,3)
+
+
+    guess3 = [1,2,2,2]
+    assert_true @mm.is_Black_Peg?(guess3,0)
+    assert_true @mm.is_Black_Peg?(guess3,1)
+    assert_true @mm.is_Black_Peg?(guess3,2)
+    assert_false @mm.is_Black_Peg?(guess3,3)
 
   end
 
   def test_black_peg_against_guess
+    # @mm.human_solution = @mm.guess
     guess = [4,5,2,1]
-    @mm.guess = @mm.human_solution
     assert_false @mm.is_Black_Peg?(guess,0)
     assert_false @mm.is_Black_Peg?(guess,1)
     assert_true @mm.is_Black_Peg?(guess,2)
     assert_false @mm.is_Black_Peg?(guess,3)
 
-    guess2 = [1,1,1,1]
+    guess2 = [1,1,4,4]
     assert_true @mm.is_Black_Peg?(guess2,0)
     assert_false @mm.is_Black_Peg?(guess2,1)
     assert_false @mm.is_Black_Peg?(guess2,2)
-    assert_false @mm.is_Black_Peg?(guess2,3)
+    assert_true @mm.is_Black_Peg?(guess2,3)
+
+
+    guess3 = [1,2,2,2]
+    assert_true @mm.is_Black_Peg?(guess3,0)
+    assert_true @mm.is_Black_Peg?(guess3,1)
+    assert_true @mm.is_Black_Peg?(guess3,2)
+    assert_false @mm.is_Black_Peg?(guess3,3)
   end
 
   def test_white_peg_assignment
+    human_solution = @mm.human_solution
     guess = [2,5,4,1]
-    assert_true @mm.is_White_Peg?(guess,0)
-    assert_true @mm.is_White_Peg?(guess,2)
-    assert_false @mm.is_White_Peg?(guess,1)
+    assert_true @mm.is_White_Peg?(human_solution,guess,0)
+    assert_true @mm.is_White_Peg?(human_solution,guess,2)
+    assert_false @mm.is_White_Peg?(human_solution,guess,1)
 
     guess = [2,4,1,2]
-    assert_true @mm.is_White_Peg?(guess,0)
-    assert_true @mm.is_White_Peg?(guess,1)
-    assert_true @mm.is_White_Peg?(guess,2)
-    assert_true @mm.is_White_Peg?(guess,3)
+    assert_true @mm.is_White_Peg?(human_solution,guess,0)
+    assert_true @mm.is_White_Peg?(human_solution,guess,1)
+    assert_true @mm.is_White_Peg?(human_solution,guess,2)
+    assert_true @mm.is_White_Peg?(human_solution,guess,3)
   end
 
   def test_white_peg_assignment_against_guess
+    human_solution = @mm.human_solution
     guess = [2,5,4,1]
-    @mm.guess = @mm.human_solution
-    assert_true @mm.is_White_Peg_against_guess?(guess,0)
-    assert_true @mm.is_White_Peg_against_guess?(guess,2)
-    assert_false @mm.is_White_Peg_against_guess?(guess,1)
+    assert_true @mm.is_White_Peg?(human_solution,guess,0)
+    assert_true @mm.is_White_Peg?(human_solution,guess,2)
+    assert_false @mm.is_White_Peg?(human_solution,guess,1)
 
     guess = [2,4,1,2]
-    assert_true @mm.is_White_Peg_against_guess?(guess,0)
-    assert_true @mm.is_White_Peg_against_guess?(guess,1)
-    assert_true @mm.is_White_Peg_against_guess?(guess,2)
-    assert_true @mm.is_White_Peg_against_guess?(guess,3)
+    assert_true @mm.is_White_Peg?(human_solution,guess,0)
+    assert_true @mm.is_White_Peg?(human_solution,guess,1)
+    assert_true @mm.is_White_Peg?(human_solution,guess,2)
+    assert_true @mm.is_White_Peg?(human_solution,guess,3)
   end
 
   def test_read_peg_from_guess
-    #human_solution = [1,2,2,4]
+    @mm.human_solution = [1,2,2,4]
     guess = [1,2,2,2]
     guess2 = [1,1,4,4]
     guess3 = [6,5,4,3]
@@ -152,6 +167,29 @@ class MyTest < Test::Unit::TestCase
     peg_return_from_guess23 = {B: 0, W: 1}
     assert_equal @mm.read_pegs(guess22), peg_return_from_guess22
     assert_equal @mm.read_pegs(guess23), peg_return_from_guess23
+
+    @mm.human_solution = [2,2,2,1]
+    guess24 = [1,1,2,2]
+    guess25 = [2,5,5,5]
+    peg_return_from_guess24 = {B: 1, W: 2}
+    peg_return_from_guess25 = {B: 1, W: 0}
+    assert_equal @mm.read_pegs(guess24), peg_return_from_guess24
+    assert_equal @mm.read_pegs(guess25), peg_return_from_guess25
+
+    @mm.human_solution = [5,4,1,4]
+    guess26 = [4,4,4,1]
+
+    peg_return_from_guess26 = {B: 1, W: 2}
+
+    assert_equal @mm.read_pegs(guess26), peg_return_from_guess26
+
+    @mm.human_solution = [1,6,2,4]
+    guess27 = [2,4,2,2]
+
+    peg_return_from_guess27 = {B: 1, W: 1}
+
+    assert_equal @mm.read_pegs(guess27), peg_return_from_guess27
+
 
   end
 
@@ -238,6 +276,13 @@ class MyTest < Test::Unit::TestCase
     assert_equal @mm.read_pegs_against_guess(guess22), peg_return_from_guess22
     assert_equal @mm.read_pegs_against_guess(guess23), peg_return_from_guess23
 
+    @mm.guess = [2,2,2,1]
+    guess24 = [1,1,2,2]
+    guess25 = [2,5,5,5]
+    peg_return_from_guess24 = {B: 1, W: 2}
+    peg_return_from_guess25 = {B: 1, W: 0}
+    assert_equal @mm.read_pegs_against_guess(guess24), peg_return_from_guess24
+    assert_equal @mm.read_pegs_against_guess(guess25), peg_return_from_guess25
 
   end
 
@@ -252,25 +297,23 @@ class MyTest < Test::Unit::TestCase
 
   def test_guess_solution_x_times
 
-    permutation_holder = @mm.all_permutations
-    true_if_im_done_testing = true
-    hack_counter = 0
+  guess_counter = 0
 
-    10000.times do
+    true_if_im_done_testing = true
+
+    1000.times do
       @mm.human_solution.clear
       4.times {@mm.human_solution.push(rand(1..6))}
 
       @mm.guess_solution
       puts @mm.number_of_guesses if @mm.number_of_guesses >= 10
-      #workaround_counter += 1 if @mm.hack_needed == true #used to determine when the workaround is used
-
       true_if_im_done_testing = false if @mm.guess != @mm.human_solution
-      @mm.all_permutations = permutation_holder #so we don't have to keep recalculating this
+      guess_counter += @mm.number_of_guesses
       @mm.number_of_guesses = 1
 
 
     end
-    puts @mm.number_of_workarounds_used
+    puts guess_counter
     assert_true true_if_im_done_testing
   end
 
