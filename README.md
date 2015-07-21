@@ -13,6 +13,6 @@ There is a sneaky bug in this app. About 6% of the time I have to reset all_perm
 
 TO-DO:
 
-1. FIX THE BUG!!!!!!!!!!!!! It is unacceptable to have to implement a work around(in this case).
+1. FIX THE BUG!!!!!!!!!!!!! The bug is in read_pegs and read_pegs_against_guess.. I am in the process of rewriting it
 
 2.There are MANY optimizations available in this code. For example, sometimes I'll call array.count(3) multiple times in a method. I believe ruby actually counts each time the method is called and to make the app take less time to run I should limit these extra method calls. These redundancies are purely a function of building this app while learning Ruby for the first time.
