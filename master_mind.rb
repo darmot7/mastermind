@@ -1,11 +1,11 @@
 class MasterMind
- # require 'debug'
+  # require 'debug'
 
-#Written by Jeremy Herzberg; jeremy.herzberg@gmail.com; www.jeremyherzberg.com
-#MasterMind algorithm derived by notable researchers (https://en.wikipedia.org/wiki/Mastermind_(board_game)#Algorithms)
-#This algorithm works by first producing all permutations of possible answers and then eliminating possiablities based
-#if the possibility produces the same peg result when tested against the guess as when the guess tested against the answer
-#AFTER ALL, THE SOLUTION WILL PRODUCE THE SAME PEG RESULT WHEN TESTED AGAINST THE GUESS AS WHEN THE GUESS IS TESTED AGAINST THE SOLUTION
+  #Written by Jeremy Herzberg; jeremy.herzberg@gmail.com; www.jeremyherzberg.com
+  #MasterMind algorithm derived by notable researchers (https://en.wikipedia.org/wiki/Mastermind_(board_game)#Algorithms)
+  #This algorithm works by first producing all permutations of possible answers and then eliminating possiablities based
+  #if the possibility produces the same peg result when tested against the guess as when the guess tested against the answer
+  #AFTER ALL, THE SOLUTION WILL PRODUCE THE SAME PEG RESULT WHEN TESTED AGAINST THE GUESS AS WHEN THE GUESS IS TESTED AGAINST THE SOLUTION
 
   attr_reader :number_of_workarounds_used
   #set all attr_accessor to to att_reader upon deployment, set to accessor for testing only.. I will leave it like this for you
@@ -28,9 +28,9 @@ class MasterMind
   end
 
   #checks to see if a number in an array is a white_peg
-  def is_White_Peg?(guess,position)
+  def is_White_Peg?(human_solution, guess,position)
 
-    return @human_solution.count(guess[position]) > 0 #&& !is_Black_Peg?(guess,position)
+    return human_solution.count(guess[position]) > 0 #&& !is_Black_Peg?(guess,position)
   end
 
   #same as is_Black_peg? but uses guess as the answer
@@ -40,9 +40,9 @@ class MasterMind
   end
 
   #same as is_White_peg? but uses guess as the answer
-  def is_White_Peg_against_guess?(guess,position)
+  def is_White_Peg_against_guess?(guess,permutation,position)
 
-    return @guess.count(guess[position]) > 0 #&& !is_Black_Peg_against_guess?(guess,position)
+    return guess.count(permutation[position]) > 0 #&& !is_Black_Peg_against_guess?(guess,position)
 
   end
 
@@ -50,83 +50,97 @@ class MasterMind
   def read_pegs(guess)
 
     @pegs = {B: 0, W: 0}
-    counted = []
-    for x in 0..3
-      if is_Black_Peg?(guess,x)
+    human_solution = Array.new(@human_solution)
+    guess_duplicate = Array.new(guess)
+
+
+    guess.each_index { |x|
+
+       if is_Black_Peg?(guess,x)
         @pegs[:B] += 1
-        if counted.include?(guess[x])  && @pegs[:W] > 0 #a way to handle double counting of duplicates
-          @pegs[:W] -= 1
+        human_solution.delete_at(human_solution.find_index(guess[x]))
+        guess_duplicate.delete_at(guess_duplicate.find_index(guess[x]))
 
-        else counted.push(guess[x])
+       end
 
-        end
+    }
 
-      elsif is_White_Peg?(guess,x)
+    guess_duplicate.each_index {|x| if is_White_Peg?(human_solution,guess_duplicate,x)
+                           @pegs[:W] += 1
+                           human_solution.delete_at(human_solution.find_index(guess_duplicate[x]))
+                           end}
 
-        if (@human_solution.count(guess[x]) < guess.count(guess[x]))
-          if counted.count(guess[x]) > 0; #if we've already found that this number is a duplicate
 
-          else @pegs[:W] += 1
-          counted.push(guess[x])
-          end
 
-        else
-          @pegs[:W] +=1
-        end
-      end
-    end
+   # for x in 0..3
+     # if is_Black_Peg?(guess,x)
+     #   @pegs[:B] += 1
+     #   if counted.include?(guess[x])  && @pegs[:W] > 0 #a way to handle double counting of duplicates
+         # @pegs[:W] -= 1
+#
+
+       # else counted.push(guess[x])
+
+       # end
+
+     # elsif is_White_Peg?(guess,x)
+
+      #  if (@human_solution.count(guess[x]) < guess.count(guess[x]))
+      #    if counted.count(guess[x]) > 0; break #if we've already found that this number is a duplicate
+
+       #   else @pegs[:W] += 1
+      #    counted.push(guess[x])
+       #   end
+
+      #  else
+       #   @pegs[:W] +=1
+       # end
+      #end
+    #end
     return @pegs
-  end
+    end
+
 
   #submits the any guess against the @guess to get the peg result
   def read_pegs_against_guess(guess)
-    pegs_g = {B: 0, W: 0}
-    counted = []
-    for x in 0..3
+
+    @pegs = {B: 0, W: 0}
+    permutation_in_series = Array.new(guess)
+    guess_duplicate = Array.new(@guess)
+
+
+    guess.each_index { |x|
+
       if is_Black_Peg_against_guess?(guess,x)
-        pegs_g[:B] += 1
-        if counted.count(guess[x]) > 0 && pegs_g[:W] > 0 #a way to handle double counting of duplicates
-          pegs_g[:W] -= 1
+        @pegs[:B] += 1
+        guess_duplicate.delete_at(guess_duplicate.find_index(guess[x]))
+        permutation_in_series.delete_at(permutation_in_series.find_index(guess[x]))
 
-        else counted.push(guess[x])
-        end
-
-      elsif is_White_Peg_against_guess?(guess,x)
-
-        if @guess.count(guess[x]) < guess.count(guess[x])
-          if counted.count(guess[x]) > 0;
-
-          else pegs_g[:W] += 1
-          counted.push(guess[x])
-          end
-
-        else
-          pegs_g[:W] +=1
-        end
       end
-    end
-    return pegs_g
+
+    }
+
+    permutation_in_series.each_index {|x| if is_White_Peg_against_guess?(guess_duplicate,permutation_in_series,x)
+                                      @pegs[:W] += 1
+                                      guess_duplicate.delete_at(guess_duplicate.find_index(permutation_in_series[x]))
+                                    end}
+    return @pegs
   end
 
   def guess_solution
-  @number_of_guesses = 1
-  all_permutations = @all_permutations
-  until read_pegs(@guess) == {B:4, W:0}
+    @number_of_guesses = 1
+    all_permutations = @all_permutations
+    guess_set = []
+    @guess = [1,1,2,2]
+
+    until read_pegs(@guess) == {B:4, W:0}
+      guess_set.push(@guess)
+
+      all_permutations = all_permutations.select {|x| read_pegs_against_guess(x) == read_pegs(@guess)}
 
 
-    all_permutations = all_permutations.select {|x| read_pegs_against_guess(x) == read_pegs(@guess)}
-
-    #this is my work around until i find the bug mentioned in readme.md. It just resets guess_solution and doesn't
-    #pass information
-    if all_permutations == []
-      all_permutations = @all_permutations
-      @guess = [1,1,2,2]
-      @number_of_guesses = 1
-      @number_of_workarounds_used +=1
-    end
-
-    @guess = all_permutations.sample
-    @number_of_guesses += 1
+      @guess = all_permutations.sample
+      @number_of_guesses += 1
 
     end
   end
