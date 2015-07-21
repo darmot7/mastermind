@@ -1,5 +1,4 @@
 class MasterMind
-  # require 'debug'
 
   #Written by Jeremy Herzberg; jeremy.herzberg@gmail.com; www.jeremyherzberg.com
   #MasterMind algorithm derived by notable researchers (https://en.wikipedia.org/wiki/Mastermind_(board_game)#Algorithms)
