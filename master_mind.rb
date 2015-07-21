@@ -7,7 +7,6 @@ class MasterMind
   #if the possibility produces the same peg result when tested against the guess as when the guess tested against the answer
   #AFTER ALL, THE SOLUTION WILL PRODUCE THE SAME PEG RESULT WHEN TESTED AGAINST THE GUESS AS WHEN THE GUESS IS TESTED AGAINST THE SOLUTION
 
-  attr_reader :number_of_workarounds_used
   #set all attr_accessor to to att_reader upon deployment, set to accessor for testing only.. I will leave it like this for you
   attr_accessor :human_solution,:guess,:all_permutations, :number_of_guesses
 
@@ -30,7 +29,7 @@ class MasterMind
   #checks to see if a number in an array is a white_peg
   def is_White_Peg?(human_solution, guess,position)
 
-    return human_solution.count(guess[position]) > 0 #&& !is_Black_Peg?(guess,position)
+    return human_solution.count(guess[position]) > 0
   end
 
   #same as is_Black_peg? but uses guess as the answer
@@ -42,7 +41,7 @@ class MasterMind
   #same as is_White_peg? but uses guess as the answer
   def is_White_Peg_against_guess?(guess,permutation,position)
 
-    return guess.count(permutation[position]) > 0 #&& !is_Black_Peg_against_guess?(guess,position)
+    return guess.count(permutation[position]) > 0
 
   end
 
@@ -69,6 +68,7 @@ class MasterMind
                            @pegs[:W] += 1
                            human_solution.delete_at(human_solution.find_index(guess_duplicate[x]))
                            end}
+
 
     return @pegs
     end
