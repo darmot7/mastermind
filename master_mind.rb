@@ -70,33 +70,6 @@ class MasterMind
                            human_solution.delete_at(human_solution.find_index(guess_duplicate[x]))
                            end}
 
-
-
-   # for x in 0..3
-     # if is_Black_Peg?(guess,x)
-     #   @pegs[:B] += 1
-     #   if counted.include?(guess[x])  && @pegs[:W] > 0 #a way to handle double counting of duplicates
-         # @pegs[:W] -= 1
-#
-
-       # else counted.push(guess[x])
-
-       # end
-
-     # elsif is_White_Peg?(guess,x)
-
-      #  if (@human_solution.count(guess[x]) < guess.count(guess[x]))
-      #    if counted.count(guess[x]) > 0; break #if we've already found that this number is a duplicate
-
-       #   else @pegs[:W] += 1
-      #    counted.push(guess[x])
-       #   end
-
-      #  else
-       #   @pegs[:W] +=1
-       # end
-      #end
-    #end
     return @pegs
     end
 
