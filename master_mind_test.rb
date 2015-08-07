@@ -158,9 +158,11 @@ class MyTest < Test::Unit::TestCase
 
   guess_counter = 0
 
-    true_if_im_done_testing = true
 
-    100.times do
+    true_if_im_done_testing = true
+    number_of_times_to_run = 10
+
+  number_of_times_to_run.times do
       @mm.human_solution.clear
       4.times {@mm.human_solution.push(rand(1..6))} #generate random solution
 
@@ -169,10 +171,9 @@ class MyTest < Test::Unit::TestCase
       true_if_im_done_testing = false if @mm.guess != @mm.human_solution
       guess_counter += @mm.number_of_guesses
       @mm.number_of_guesses = 1
-
-
+    
     end
-
+    print guess_counter
     assert_true true_if_im_done_testing
   end
 
