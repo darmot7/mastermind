@@ -14,9 +14,9 @@ class MasterMind
   end
 
   #checks to see if a number in an array is a black_peg
-  def is_Black_Peg?(guess,position)
+  def is_Black_Peg?(guess,position,human_solution = @human_solution)
 
-    return @human_solution[position] == guess[position]
+    return human_solution[position] == guess[position]
 
   end
 
@@ -26,90 +26,51 @@ class MasterMind
     return human_solution.count(guess[position]) > 0
   end
 
-  #same as is_Black_peg? but uses guess as the answer
-  def is_Black_Peg_against_guess?(guess,position)
-
-    return @guess[position] == guess[position]
-  end
-
-  #same as is_White_peg? but uses guess as the answer
-  def is_White_Peg_against_guess?(guess,permutation,position)
-
-    return guess.count(permutation[position]) > 0
-
-  end
-
   #submits the @guess against the answer to get the peg result
-  def read_pegs(guess)
+  def read_pegs(guess, solution)
 
-    @pegs = {B: 0, W: 0}
-    human_solution = Array.new(@human_solution)
-    guess_duplicate = Array.new(guess)
+    pegs = {B: 0, W: 0}
+    solution_duplicate = solution.dup
+    guess_duplicate = guess.dup
 
 
     guess.each_index { |x|
 
-       if is_Black_Peg?(guess,x)
-        @pegs[:B] += 1
-        human_solution.delete_at(human_solution.find_index(guess[x]))
+       if is_Black_Peg?(guess, x, solution)
+        pegs[:B] += 1
+        solution_duplicate.delete_at(solution_duplicate.find_index(guess[x]))
         guess_duplicate.delete_at(guess_duplicate.find_index(guess[x]))
 
        end
 
     }
 
-    guess_duplicate.each_index {|x| if is_White_Peg?(human_solution,guess_duplicate,x)
-                           @pegs[:W] += 1
-                           human_solution.delete_at(human_solution.find_index(guess_duplicate[x]))
+    guess_duplicate.each_index {|x| if is_White_Peg?(solution_duplicate,guess_duplicate,x)
+                           pegs[:W] += 1
+                           solution_duplicate.delete_at(solution_duplicate.find_index(guess_duplicate[x]))
                            end}
 
 
-    return @pegs
+    return pegs
     end
-
-
-  #submits the any guess against the @guess to get the peg result
-  def read_pegs_against_guess(guess)
-
-    @pegs = {B: 0, W: 0}
-    permutation_in_series = Array.new(guess)
-    guess_duplicate = Array.new(@guess)
-
-
-    guess.each_index { |x|
-
-      if is_Black_Peg_against_guess?(guess,x)
-        @pegs[:B] += 1
-        guess_duplicate.delete_at(guess_duplicate.find_index(guess[x]))
-        permutation_in_series.delete_at(permutation_in_series.find_index(guess[x]))
-
-      end
-    }
-
-    permutation_in_series.each_index {|x| if is_White_Peg_against_guess?(guess_duplicate,permutation_in_series,x)
-                                      @pegs[:W] += 1
-                                      guess_duplicate.delete_at(guess_duplicate.find_index(permutation_in_series[x]))
-                                          end
-    }
-    
-    return @pegs
-  end
 
   def guess_solution
     @number_of_guesses = 1
     all_permutations = [1,2,3,4,5,6].repeated_permutation(4).to_a
     @guess = [1,1,2,2] #Knuth demonstrated this as the optimal starting guess
 
-    until read_pegs(@guess) == {B:4, W:0}
+    until read_pegs(@guess,@human_solution) == {B:4, W:0}
 
+      #pegs_from_guess_against_solution = read_pegs(@guess,@human_solution) # so this doesn't have to be rerun during the next select
 
-      all_permutations = all_permutations.select {|x| read_pegs_against_guess(x) == read_pegs(@guess)}
+      all_permutations = all_permutations.select {|x| read_pegs(x,@guess) == read_pegs(@guess,@human_solution)}
 
 
       @guess = all_permutations.sample
       @number_of_guesses += 1
 
     end
+
   end
 
 end
