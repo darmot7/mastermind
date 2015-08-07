@@ -8,7 +8,6 @@ class MyTest < Test::Unit::TestCase
   # to set up fixture information.
   def setup
     @mm = MasterMind.new([1,2,2,4])
-
   end
 
   # Called after every test method runs. Can be used to tear
