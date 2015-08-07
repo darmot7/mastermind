@@ -14,14 +14,14 @@ class MasterMind
   end
 
   #checks to see if a number in an array is a black_peg
-  def is_Black_Peg?(guess,position,human_solution = @human_solution)
+  def is_black_peg?(guess,position,human_solution = @human_solution)
 
     return human_solution[position] == guess[position]
 
   end
 
   #checks to see if a number in an array is a white_peg
-  def is_White_Peg?(human_solution, guess,position)
+  def is_white_peg?(human_solution, guess,position)
 
     return human_solution.count(guess[position]) > 0
   end
@@ -36,7 +36,7 @@ class MasterMind
 
     guess.each_index { |x|
 
-       if is_Black_Peg?(guess, x, solution)
+       if is_black_peg?(guess, x, solution)
         pegs[:B] += 1
         solution_duplicate.delete_at(solution_duplicate.find_index(guess[x]))
         guess_duplicate.delete_at(guess_duplicate.find_index(guess[x]))
@@ -45,7 +45,7 @@ class MasterMind
 
     }
 
-    guess_duplicate.each_index {|x| if is_White_Peg?(solution_duplicate,guess_duplicate,x)
+    guess_duplicate.each_index {|x| if is_white_peg?(solution_duplicate,guess_duplicate,x)
                            pegs[:W] += 1
                            solution_duplicate.delete_at(solution_duplicate.find_index(guess_duplicate[x]))
                            end}

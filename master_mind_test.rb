@@ -18,23 +18,23 @@ class MyTest < Test::Unit::TestCase
   def test_black_peg_assignment
 
     guess = [4,5,2,1]
-    assert_false @mm.is_Black_Peg?(guess,0,@mm.human_solution)
-    assert_false @mm.is_Black_Peg?(guess,1,@mm.human_solution)
-    assert_true @mm.is_Black_Peg?(guess,2,@mm.human_solution)
-    assert_false @mm.is_Black_Peg?(guess,3,@mm.human_solution)
+    assert_false @mm.is_black_peg?(guess,0,@mm.human_solution)
+    assert_false @mm.is_black_peg?(guess,1,@mm.human_solution)
+    assert_true @mm.is_black_peg?(guess,2,@mm.human_solution)
+    assert_false @mm.is_black_peg?(guess,3,@mm.human_solution)
 
     guess2 = [1,1,4,4]
-    assert_true @mm.is_Black_Peg?(guess2,0,@mm.human_solution)
-    assert_false @mm.is_Black_Peg?(guess2,1,@mm.human_solution)
-    assert_false @mm.is_Black_Peg?(guess2,2,@mm.human_solution)
-    assert_true @mm.is_Black_Peg?(guess2,3,@mm.human_solution)
+    assert_true @mm.is_black_peg?(guess2,0,@mm.human_solution)
+    assert_false @mm.is_black_peg?(guess2,1,@mm.human_solution)
+    assert_false @mm.is_black_peg?(guess2,2,@mm.human_solution)
+    assert_true @mm.is_black_peg?(guess2,3,@mm.human_solution)
 
 
     guess3 = [1,2,2,2]
-    assert_true @mm.is_Black_Peg?(guess3,0,@mm.human_solution)
-    assert_true @mm.is_Black_Peg?(guess3,1,@mm.human_solution)
-    assert_true @mm.is_Black_Peg?(guess3,2,@mm.human_solution)
-    assert_false @mm.is_Black_Peg?(guess3,3,@mm.human_solution)
+    assert_true @mm.is_black_peg?(guess3,0,@mm.human_solution)
+    assert_true @mm.is_black_peg?(guess3,1,@mm.human_solution)
+    assert_true @mm.is_black_peg?(guess3,2,@mm.human_solution)
+    assert_false @mm.is_black_peg?(guess3,3,@mm.human_solution)
 
   end
 
@@ -43,15 +43,15 @@ class MyTest < Test::Unit::TestCase
   def test_white_peg_assignment
     human_solution = @mm.human_solution
     guess = [2,5,4,1]
-    assert_true @mm.is_White_Peg?(human_solution,guess,0)
-    assert_true @mm.is_White_Peg?(human_solution,guess,2)
-    assert_false @mm.is_White_Peg?(human_solution,guess,1)
+    assert_true @mm.is_white_peg?(human_solution,guess,0)
+    assert_true @mm.is_white_peg?(human_solution,guess,2)
+    assert_false @mm.is_white_peg?(human_solution,guess,1)
 
     guess = [2,4,1,2]
-    assert_true @mm.is_White_Peg?(human_solution,guess,0)
-    assert_true @mm.is_White_Peg?(human_solution,guess,1)
-    assert_true @mm.is_White_Peg?(human_solution,guess,2)
-    assert_true @mm.is_White_Peg?(human_solution,guess,3)
+    assert_true @mm.is_white_peg?(human_solution,guess,0)
+    assert_true @mm.is_white_peg?(human_solution,guess,1)
+    assert_true @mm.is_white_peg?(human_solution,guess,2)
+    assert_true @mm.is_white_peg?(human_solution,guess,3)
   end
 
 
