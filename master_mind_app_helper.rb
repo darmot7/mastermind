@@ -59,7 +59,7 @@ end
 
       computer_answer = convert_from_num_to_color(mm.guess)
 
-      print "I've guessed your solution and it is: " + computer_answer.to_s + ' and it took ' + mm.number_of_guesses.to_s + " guesses. \n "
+      print "I've guessed your solution and it is: " + computer_answer.to_s + ', it took ' + mm.number_of_guesses.to_s + " guesses. \n "
 
     else
       print "Quitting.....Have a nice day! \n"
