@@ -9,7 +9,7 @@ end
   def run
 
     human_solution = []
-    puts 'Please Input the Solution. The solution will consist of 4 colors. Your Color choices are (R)ed, (G)reen, (O)range, (Y)ellow, (B)lue, (P)urple'
+    puts 'Please Input the Solution. The solution will consist of 6 colors. Your Color choices are (R)ed, (G)reen, (O)range, (Y)ellow, (B)lue, (P)urple'
 
     #loop to populate the human_solution
     @solution_size.times { |x|
