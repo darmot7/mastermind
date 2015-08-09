@@ -1,8 +1,9 @@
-require 'test/unit'
+
+require 'minitest/autorun'
 require './master_mind'
 require './master_mind_app_helper'
 
-class MyTest < Test::Unit::TestCase
+class MyTest < Minitest::Test
 
   # Called before every test method runs. Can be used
   # to set up fixture information.
@@ -17,23 +18,23 @@ class MyTest < Test::Unit::TestCase
   def test_black_peg_assignment
 
     guess = [4,5,2,1]
-    assert_false @mm.is_black_peg?(guess,0,@mm.human_solution)
-    assert_false @mm.is_black_peg?(guess,1,@mm.human_solution)
-    assert_true @mm.is_black_peg?(guess,2,@mm.human_solution)
-    assert_false @mm.is_black_peg?(guess,3,@mm.human_solution)
+    assert_equal @mm.is_black_peg?(guess,0,@mm.human_solution),false
+    assert_equal @mm.is_black_peg?(guess,1,@mm.human_solution),false
+    assert_equal @mm.is_black_peg?(guess,2,@mm.human_solution),true
+    assert_equal @mm.is_black_peg?(guess,3,@mm.human_solution),false
 
     guess2 = [1,1,4,4]
-    assert_true @mm.is_black_peg?(guess2,0,@mm.human_solution)
-    assert_false @mm.is_black_peg?(guess2,1,@mm.human_solution)
-    assert_false @mm.is_black_peg?(guess2,2,@mm.human_solution)
-    assert_true @mm.is_black_peg?(guess2,3,@mm.human_solution)
+    assert_equal @mm.is_black_peg?(guess2,0,@mm.human_solution),true
+    assert_equal @mm.is_black_peg?(guess2,1,@mm.human_solution),false
+    assert_equal @mm.is_black_peg?(guess2,2,@mm.human_solution),false
+    assert_equal @mm.is_black_peg?(guess2,3,@mm.human_solution),true
 
 
     guess3 = [1,2,2,2]
-    assert_true @mm.is_black_peg?(guess3,0,@mm.human_solution)
-    assert_true @mm.is_black_peg?(guess3,1,@mm.human_solution)
-    assert_true @mm.is_black_peg?(guess3,2,@mm.human_solution)
-    assert_false @mm.is_black_peg?(guess3,3,@mm.human_solution)
+    assert_equal @mm.is_black_peg?(guess3,0,@mm.human_solution),true
+    assert_equal @mm.is_black_peg?(guess3,1,@mm.human_solution),true
+    assert_equal @mm.is_black_peg?(guess3,2,@mm.human_solution),true
+    assert_equal @mm.is_black_peg?(guess3,3,@mm.human_solution),false
 
   end
 
@@ -42,15 +43,15 @@ class MyTest < Test::Unit::TestCase
   def test_white_peg_assignment
     human_solution = @mm.human_solution
     guess = [2,5,4,1]
-    assert_true @mm.is_white_peg?(human_solution,guess,0)
-    assert_true @mm.is_white_peg?(human_solution,guess,2)
-    assert_false @mm.is_white_peg?(human_solution,guess,1)
+    assert_equal @mm.is_white_peg?(human_solution,guess,0),true
+    assert_equal @mm.is_white_peg?(human_solution,guess,2),true
+    assert_equal @mm.is_white_peg?(human_solution,guess,1),false
 
     guess = [2,4,1,2]
-    assert_true @mm.is_white_peg?(human_solution,guess,0)
-    assert_true @mm.is_white_peg?(human_solution,guess,1)
-    assert_true @mm.is_white_peg?(human_solution,guess,2)
-    assert_true @mm.is_white_peg?(human_solution,guess,3)
+    assert_equal @mm.is_white_peg?(human_solution,guess,0),true
+    assert_equal @mm.is_white_peg?(human_solution,guess,1),true
+    assert_equal @mm.is_white_peg?(human_solution,guess,2),true
+    assert_equal @mm.is_white_peg?(human_solution,guess,3),true
   end
 
 
@@ -150,7 +151,7 @@ class MyTest < Test::Unit::TestCase
     @mm.human_solution.clear
     4.times {@mm.human_solution.push(rand(1..6))} #generate random solution
     @mm.guess_solution
-    assert_true @mm.guess == @mm.human_solution
+    assert_equal @mm.guess == @mm.human_solution, true
   end
 
   def test_guess_solution_x_times
@@ -173,18 +174,18 @@ class MyTest < Test::Unit::TestCase
     
     end
     print guess_counter
-    assert_true true_if_im_done_testing
+    assert_equal true_if_im_done_testing, true
   end
 
   def test_is_valid_number
     master_mind_app_helper = MasterMindAppHelper.new
 
     input = "g"
-    assert_true master_mind_app_helper.is_valid_input?(input)
+    assert_equal master_mind_app_helper.is_valid_input?(input),true
     input = "q"
-    assert_true master_mind_app_helper.is_valid_input?(input)
+    assert_equal master_mind_app_helper.is_valid_input?(input),true
     input = "12345"
-    assert_false master_mind_app_helper.is_valid_input?(input)
+    assert_equal master_mind_app_helper.is_valid_input?(input),false
 
   end
 end
