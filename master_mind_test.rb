@@ -14,47 +14,6 @@ class MyTest < Minitest::Test
   # Called after every test method runs. Can be used to tear
   # down fixture information.
 
-
-  def test_black_peg_assignment
-
-    guess = [4,5,2,1]
-    assert_equal @mm.is_black_peg?(guess,0,@mm.human_solution),false
-    assert_equal @mm.is_black_peg?(guess,1,@mm.human_solution),false
-    assert_equal @mm.is_black_peg?(guess,2,@mm.human_solution),true
-    assert_equal @mm.is_black_peg?(guess,3,@mm.human_solution),false
-
-    guess2 = [1,1,4,4]
-    assert_equal @mm.is_black_peg?(guess2,0,@mm.human_solution),true
-    assert_equal @mm.is_black_peg?(guess2,1,@mm.human_solution),false
-    assert_equal @mm.is_black_peg?(guess2,2,@mm.human_solution),false
-    assert_equal @mm.is_black_peg?(guess2,3,@mm.human_solution),true
-
-
-    guess3 = [1,2,2,2]
-    assert_equal @mm.is_black_peg?(guess3,0,@mm.human_solution),true
-    assert_equal @mm.is_black_peg?(guess3,1,@mm.human_solution),true
-    assert_equal @mm.is_black_peg?(guess3,2,@mm.human_solution),true
-    assert_equal @mm.is_black_peg?(guess3,3,@mm.human_solution),false
-
-  end
-
-
-
-  def test_white_peg_assignment
-    human_solution = @mm.human_solution
-    guess = [2,5,4,1]
-    assert_equal @mm.is_white_peg?(human_solution,guess,0),true
-    assert_equal @mm.is_white_peg?(human_solution,guess,2),true
-    assert_equal @mm.is_white_peg?(human_solution,guess,1),false
-
-    guess = [2,4,1,2]
-    assert_equal @mm.is_white_peg?(human_solution,guess,0),true
-    assert_equal @mm.is_white_peg?(human_solution,guess,1),true
-    assert_equal @mm.is_white_peg?(human_solution,guess,2),true
-    assert_equal @mm.is_white_peg?(human_solution,guess,3),true
-  end
-
-
   def test_read_peg_from_guess_only_black
 
     @mm.human_solution = [1,2,2,4]
@@ -151,7 +110,8 @@ class MyTest < Minitest::Test
     @mm.human_solution.clear
     4.times {@mm.human_solution.push(rand(1..6))} #generate random solution
     @mm.guess_solution
-    assert_equal @mm.guess == @mm.human_solution, true
+    assert_equal @mm.read_pegs(@mm.guess,@mm.human_solution), {B: 4, W: 0}
+
   end
 
   def test_guess_solution_x_times
@@ -160,7 +120,7 @@ class MyTest < Minitest::Test
 
 
     true_if_im_done_testing = true
-    number_of_times_to_run = 10
+    number_of_times_to_run = 100
 
   number_of_times_to_run.times do
       @mm.human_solution.clear

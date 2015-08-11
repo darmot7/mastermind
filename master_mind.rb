@@ -11,57 +11,50 @@ class MasterMind
 
   def initialize(human_solution)
     @human_solution = human_solution
+    @guess = [1,1,2,2]
   end
 
-  #checks to see if a number in an array is a black_peg
-  def is_black_peg?(guess,position,human_solution = @human_solution)
-
-    return human_solution[position] == guess[position]
-
-  end
-
-  #checks to see if a number in an array is a white_peg
-  def is_white_peg?(human_solution, guess,position)
-
-    return human_solution.count(guess[position]) > 0
-  end
-
-  #submits the @guess against the answer to get the peg result
+  #this method uses an accounting system to read the pegs in O(n) time
   def read_pegs(guess, solution)
 
-    pegs = {B: 0, W: 0}
-    solution_duplicate = solution.dup
-    guess_duplicate = guess.dup
+  pegs = {B: 0, W: 0}
+  solution_array = [0,0,0,0,0,0,0] #in this array 0 means 0 so the 7th spot means 6
+  guess_copy = guess.dup
+
+  solution.each_index { |x|
+
+    if guess_copy[x] == solution[x]
+       pegs[:B] += 1
+       guess_copy[x] = 0
 
 
-    guess.each_index { |x|
+    else
+      solution_array[solution[x]] += 1
 
-       if is_black_peg?(guess, x, solution)
-        pegs[:B] += 1
-        solution_duplicate.delete_at(solution_duplicate.find_index(guess[x]))
-        guess_duplicate.delete_at(guess_duplicate.find_index(guess[x]))
+     end
+  }
 
-       end
+  guess_copy.each_index { |x|
 
-    }
+    if solution_array[guess_copy[x]] != 0
 
-    guess_duplicate.each_index {|x| if is_white_peg?(solution_duplicate,guess_duplicate,x)
-                           pegs[:W] += 1
-                           solution_duplicate.delete_at(solution_duplicate.find_index(guess_duplicate[x]))
-                           end}
+      solution_array[guess_copy[x]] -= 1
 
+      pegs[:W] += 1
 
-    return pegs
     end
+  }
+
+  return pegs
+
+  end
 
   def guess_solution
     @number_of_guesses = 1
     all_permutations = [1,2,3,4,5,6].repeated_permutation(4).to_a
-    @guess = [1,1,2,2] #Knuth demonstrated this as the optimal starting guess
+    #@guess = [1,1,2,2] #Knuth demonstrated this as the optimal starting guess
 
     until read_pegs(@guess,@human_solution) == {B:4, W:0}
-
-      #pegs_from_guess_against_solution = read_pegs(@guess,@human_solution) # so this doesn't have to be rerun during the next select
 
       all_permutations = all_permutations.select {|x| read_pegs(x,@guess) == read_pegs(@guess,@human_solution)}
 
@@ -70,7 +63,7 @@ class MasterMind
       @number_of_guesses += 1
 
     end
-
   end
-
 end
+
+
