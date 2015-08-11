@@ -14,31 +14,34 @@ class MasterMind
     @guess = [1,1,2,2]
   end
 
-  #this method uses an accounting system to read the pegs in O(n) time
+
   def read_pegs(guess, solution)
 
   pegs = {B: 0, W: 0}
-  solution_array = [0,0,0,0,0,0,0] #in this array 0 means 0 so the 7th spot means 6
+  accounting_array = [0,0,0,0,0,0,0] #positions 1-6 in this array correspond to each possiable number in a solution, position 0 is used to hold values that shouldn't be counted per the rules of mastermind
   guess_copy = guess.dup
 
+  #this loop assigns black pegs and adds remaining pegs to the solution array
   solution.each_index { |x|
 
-    if guess_copy[x] == solution[x]
+
+    if guess_copy[x] == solution[x] #this is a black peg
        pegs[:B] += 1
-       guess_copy[x] = 0
+       guess_copy[x] = 0 #to make sure we don't count this value again in the next loop
 
 
-    else
-      solution_array[solution[x]] += 1
+    else #else update the accounting array
+      accounting_array[solution[x]] += 1
 
      end
   }
 
+  #this loop assigns white pegs by finding entries
   guess_copy.each_index { |x|
 
-    if solution_array[guess_copy[x]] != 0
+    if accounting_array[guess_copy[x]] != 0 #check 
 
-      solution_array[guess_copy[x]] -= 1
+      accounting_array[guess_copy[x]] -= 1
 
       pegs[:W] += 1
 
@@ -52,7 +55,6 @@ class MasterMind
   def guess_solution
     @number_of_guesses = 1
     all_permutations = [1,2,3,4,5,6].repeated_permutation(4).to_a
-    #@guess = [1,1,2,2] #Knuth demonstrated this as the optimal starting guess
 
     until read_pegs(@guess,@human_solution) == {B:4, W:0}
 
