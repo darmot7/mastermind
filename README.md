@@ -1,5 +1,6 @@
 # mastermind
 A mastermind Solver that solves Mastermind Secrets in 4.65 guesses.
+https://en.wikipedia.org/wiki/Mastermind_(board_game)
 
 ##written in Ruby by Jeremy Herzberg (jeremy.herzberg@gmail.com)
 
